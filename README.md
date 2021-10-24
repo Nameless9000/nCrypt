@@ -7,7 +7,7 @@ import_code("LIBRARY_PATH.src")
 
 nCrypt = new nCryptLibrary
 
-secret = "H@McQfTjWnZr4u7x!A%D*G-JaNdRgUkX" // Keep this secure and do not share (https://www.allkeysgenerator.com/Random/Security-Encryption-Key-Generator.aspx)
+secret = "H@McQfTjWnZr4u7x!A%D*G-JaNdRgUkX" //-- Keep this secure and do not share (https://www.allkeysgenerator.com/Random/Security-Encryption-Key-Generator.aspx)
 
 //-- (optional, the default is md5)
 nCrypt.HashMethod = function(inp)
@@ -27,5 +27,5 @@ else
   print("Password is incorrect!")
 end if
 
-// NOTE: You can look at the code if you want to make it more secure.
+//-- NOTE: You can look at the code if you want to make it more secure.
 ```
