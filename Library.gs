@@ -34,13 +34,13 @@ end function
 
 // -- Main Library -- \\
 
-nCrypt = {}
+nCryptLibrary = {}
 
-nCrypt.HashMethod = function(inp)
+nCryptLibrary.HashMethod = function(inp)
     return md5(inp)
 end function
 
-nCrypt.GenerateRandomString = function(length)
+nCryptLibrary.GenerateRandomString = function(length)
     output = ""
 
     for i in range(1, length)
@@ -51,7 +51,7 @@ nCrypt.GenerateRandomString = function(length)
     return output
 end function
 
-nCrypt.Encode = function(inputString)
+nCryptLibrary.Encode = function(inputString)
     lst=[]
     for c in inputString
         lst.push(c.code)
@@ -60,13 +60,13 @@ nCrypt.Encode = function(inputString)
     return enc
 end function
 
-nCrypt.HMac = function(inputString, secret)
+nCryptLibrary.HMac = function(inputString, secret)
     newString = secret+"$"+inputString
     hashedString = self.HashMethod(newString)
     return self.Encode(hashedString)
 end function
 
-nCrypt.CreateHash = function(inputString, secret)
+nCryptLibrary.CreateHash = function(inputString, secret)
     salt = self.GenerateRandomString(15)
 
     saltedString = self.Encode(salt+inputString)
@@ -75,7 +75,7 @@ nCrypt.CreateHash = function(inputString, secret)
     return "$"+salt+"$"+hashedString
 end function
 
-nCrypt.CheckHash = function(inputString, inputHash, secret)
+nCryptLibrary.CheckHash = function(inputString, inputHash, secret)
     strings = inputHash.split("\$")
     strings.pull
 
@@ -89,4 +89,4 @@ nCrypt.CheckHash = function(inputString, inputHash, secret)
     return output == inputHash
 end function
 
-return nCrypt
+return nCryptLibrary
