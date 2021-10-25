@@ -7,24 +7,28 @@ import_code("LIBRARY_PATH.src")
 
 nCrypt = new nCryptLibrary
 
-secret = "H@McQfTjWnZr4u7x!A%D*G-JaNdRgUkX" //-- Keep this secure and do not share (https://www.allkeysgenerator.com/Random/Security-Encryption-Key-Generator.aspx)
+nCrypt.secret = "" //-- leave blank if you want it random (you can't check a hash if it has a different secret)
+//-- print(nCrypt.getSecret())  //-- prints the secret or a random secret for you to set
 
-//-- (optional, the default is md5)
+//-- (optional, the default is R1 https://github.com/Finko42/GreyHack/blob/main/Hash%20Functions/R1.src)
 nCrypt.HashMethod = function(inp)
-    return md5(inp)
+    return self.R1(inp) // if you want md5 replace "self.R1(" with "md5("
 end function
 
 //-- Create a hash
-input = user_input("Enter password:", 1)
-hashedPassword = nCrypt.CreateHash(input, secret)
+input = user_input("Enter string: ")
+hashedString = nCrypt.CreateHash(input)
+
+//-- Print the hash for testing
+print("\nHash: <color=red>"+hashedString+"</color>\n")
 
 //-- Check the hash
-input = user_input("Enter password:", 1)
-flag = nCrypt.CheckHash(input, hashedPassword, secret)
+input = user_input("Enter string: ")
+flag = nCrypt.CheckHash(input, hashedString)
 if flag then
-  print("Password is correct!")
+  print("String is the same.")
 else
-  print("Password is incorrect!")
+  print("String is not the same.")
 end if
 
 //-- NOTE: You can look at the code if you want to make it more secure.
