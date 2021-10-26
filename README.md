@@ -38,5 +38,7 @@ end if
 Note: Most the stuff is modified but I decided to add credits anyway
 
 R1: https://github.com/Finko42
+
 Base64 Encode: Layth#2146 (198861674424303616)
+
 Hex to Decimal: Erekel#0001 (155429886251630592)
