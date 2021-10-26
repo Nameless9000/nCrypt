@@ -12,7 +12,7 @@ nCrypt.secret = "" //-- leave blank if you want it random (you can't check a has
 
 //-- (optional, the default is R1 https://github.com/Finko42/GreyHack/blob/main/Hash%20Functions/R1.src)
 nCrypt.HashMethod = function(inp)
-    return self.R1(inp) // if you want md5 replace "self.R1(" with "md5("
+    return self.R1(inp) //-- if you want md5 replace "self.R1(" with "md5("
 end function
 
 //-- Create a hash
