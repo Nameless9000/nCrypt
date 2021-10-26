@@ -206,6 +206,8 @@ nCryptLibrary.CheckHash = function(inputString, inputHash)
     strings.pull
 
     version = strings[0]
+    if version != self.version then return exit("<color=red>Error: The hash is using version "+version+" and you are running nCrypt version "+self.version+"</color>")
+
     mainString = strings[1]
 
     salt = mainString[:24]
