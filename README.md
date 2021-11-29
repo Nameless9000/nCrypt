@@ -1,7 +1,7 @@
 # nCrypt
 nCrypt is a Greyhack hashing helper module for people who don't know much about password security or people who don't want to write one lol
 
-![Image of nCrypt](https://media.discordapp.net/attachments/415878440001208320/902348381354086400/unknown.png)
+![Image of nCrypt](https://media.discordapp.net/attachments/907673434484539452/914980621166710854/unknown.png)
 
 ## How to use:
 ```lua
@@ -9,24 +9,25 @@ import_code("LIBRARY_PATH.src")
 
 nCrypt = new nCryptLibrary
 
+nCrypt.iterations = 69 //-- how many iterations you want more iterations = takes longer to crack
 nCrypt.secret = "" //-- leave blank if you want it random (you can't check a hash if it has a different secret)
 //-- print(nCrypt.getSecret())  //-- prints the secret or a random secret for you to set
 
 //-- (optional, the default is R1 https://github.com/Finko42/GreyHack/blob/main/Hash%20Functions/R1.src)
 nCrypt.HashMethod = function(inp)
-    return self.R1(inp) //-- if you want md5 replace "self.R1(" with "md5("
+    return self.R1(inp) // if you want md5 replace "self.R1(" with "md5("
 end function
 
 //-- Create a hash
 input = user_input("Enter string: ")
-hashedString = nCrypt.CreateHash(input)
+hashedString = nCrypt.Hash(input)
 
 //-- Print the hash for testing
 print("\nHash: <color=red>"+hashedString+"</color>\n")
 
 //-- Check the hash
 input = user_input("Enter string: ")
-flag = nCrypt.CheckHash(input, hashedString)
+flag = nCrypt.Compare(input, hashedString)
 if flag then
   print("String is the same.")
 else
