@@ -1,6 +1,6 @@
 nCryptLibrary = {}
 
-nCryptLibrary.version = "2a"
+nCryptLibrary.version = "2b"
 
 band=function(x,y)
     return bitwise("&",x,y) 
@@ -139,9 +139,16 @@ nCryptLibrary.R1 = function(input) // Returns 240-bit hash
 end function
 
 nCryptLibrary.secret = ""
+nCryptLibrary.iterations = 0
+
+nCryptLibrary.getIterations = function()
+    if self.iterations == 0 then self.iterations = 15
+
+    return self.iterations
+end function
 
 nCryptLibrary.getSecret = function()
-    if self.secret.trim == "" then self.secret = nCryptLibrary.GenerateRandomString(32)
+    if self.secret.trim == "" then self.secret = self.GenerateRandomString(32)
 
     return self.secret
 end function
@@ -190,34 +197,47 @@ nCryptLibrary.GenerateSalt = function()
     return self.HexEncode(randomStr)
 end function
 
-nCryptLibrary.CreateHash = function(inputString)
-    salt = self.GenerateSalt()
+nCryptLibrary.CreateHash = function(inputString, iterations = null, salt = null)
+    if iterations == null then iterations = self.getIterations()
+    if salt == null then salt = self.GenerateSalt()
 
     saltedString = self.Encode(salt+inputString)
     hashedString = self.HMac(saltedString)
 
-    output = ("$"+self.version+"$"+salt+hashedString).replace("\n","n")
+    output = ("$"+self.version+"$"+str(iterations)+"$"+salt+hashedString).replace("\n","n")
 
     return output
 end function
 
-nCryptLibrary.CheckHash = function(inputString, inputHash)
+nCryptLibrary.Hash = function(inputString, iterations = null, salt = null)
+    if iterations == null then iterations = self.getIterations()
+    if salt == null then salt = self.GenerateSalt()
+
+    for i in range(1, iterations)
+        inputString = self.CreateHash(inputString, i, salt)
+    end for
+
+    return inputString
+end function
+
+nCryptLibrary.Compare = function(inputString, inputHash)
     strings = inputHash.split("\$")
     strings.pull
 
     version = strings[0]
     if version != self.version then return exit("<color=red>Error: The hash is using version "+version+" and you are running nCrypt version "+self.version+"</color>")
 
-    mainString = strings[1]
+    iterations = strings[1].to_int
+
+    mainString = strings[2]
 
     salt = mainString[:24]
 
-    saltedString = self.Encode(salt+inputString)
-    hashedString = self.HMac(saltedString)
+    for i in range(1, iterations)
+        inputString = self.CreateHash(inputString, i, salt)
+    end for
 
-    output = ("$"+self.version+"$"+salt+hashedString).replace("\n","n")
-
-    return output == inputHash
+    return inputString == inputHash
 end function
 
 return nCryptLibrary
