@@ -9,7 +9,7 @@ import_code("LIBRARY_PATH.src")
 
 nCrypt = new nCryptLibrary
 
-nCrypt.iterations = 69 //-- how many iterations you want more iterations = takes longer to crack
+nCrypt.setIterations(12) //-- how many iterations you want more iterations = takes longer to crack
 nCrypt.secret = "" //-- leave blank if you want it random (you can't check a hash if it has a different secret)
 //-- print(nCrypt.getSecret())  //-- prints the secret or a random secret for you to set
 
