@@ -1,6 +1,6 @@
 nCryptLibrary = {}
 
-nCryptLibrary.version = "2b"
+nCryptLibrary.version = "2b1"
 
 band=function(x,y)
     return bitwise("&",x,y) 
@@ -142,9 +142,14 @@ nCryptLibrary.secret = ""
 nCryptLibrary.iterations = 0
 
 nCryptLibrary.getIterations = function()
-    if self.iterations == 0 then self.iterations = 15
+    if self.iterations == 0 then self.iterations = 2^(12/2)
 
     return self.iterations
+end function
+
+nCryptLibrary.setIterations = function(iter)
+    if iter < 12 then iter = 12
+    self.iterations = 2^(iter/2)
 end function
 
 nCryptLibrary.getSecret = function()
