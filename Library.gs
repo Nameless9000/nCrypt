@@ -148,7 +148,7 @@ nCryptLibrary.getIterations = function()
 end function
 
 nCryptLibrary.setIterations = function(iter)
-    if iter < 12 then iter = 12
+    if iter < 10 then iter = 10
     self.iterations = 2^(iter/2)
 end function
 
