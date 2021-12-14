@@ -1,5 +1,5 @@
 # nCrypt
-Version: 2c
+Version: 2c1
 
 nCrypt is a Greyhack hashing helper module for people who don't know much about password security or people who don't want to write one lol
 
@@ -39,11 +39,40 @@ end if
 //-- NOTE: You can look at the code if you want to make it more secure.
 ```
 
-# Credits:
-Note: Most the stuff is modified but I decided to add credits anyway
+## For Servers
+```lua
+import_code("LIBRARY_PATH.src")
 
+nCrypt = new nCryptLibrary
+
+nCrypt.iterations = 5
+nCrypt.secret = "RANDOM STRING" //-- set this to a random string
+
+Encode = function(password)
+    password = password.replace("\n","")
+    password = password.replace(char(10),"")
+    password = password.trim
+
+    password = nCrypt.Hash(password)
+
+    password = password.replace("\n","")
+    password = password.replace(char(10),"")
+    password = password.trim
+
+    return password
+end function
+
+Decode = function(input) //-- remove this section for encode.src or they will know ur pass
+    pass = "RootPassword" //-- set this to your root password
+    if nCrypt.Compare(pass,input) then return pass
+    return "no"
+end function
+```
+
+# Credits:
 ```
 SHA2-256: https://github.com/Finko42
+R1: https://github.com/Finko42
 Base64 Encode: Layth#2146 (198861674424303616)
 Hex to Decimal: Erekel#0001 (155429886251630592)
 ```
