@@ -40,13 +40,18 @@ end if
 ```
 
 ## For Servers
+1. Edit the line that says ' pass = "RootPassword" ' and replace RootPassword with your root password
+2. Compile the code as /server/conf/decode.bin
+3. Remove the 'Decode' function and save the code as /server/conf/encode.src
+4. Test if everything works
+
 ```lua
-import_code("LIBRARY_PATH.src")
+//-- PASTE THE CODE FROM 'Library.gs' ABOVE THE CODE BELOW
 
 nCrypt = new nCryptLibrary
 
 nCrypt.iterations = 5
-nCrypt.secret = "RANDOM STRING" //-- set this to a random string
+nCrypt.secret = "RANDOM STRING" //-- set this to a random string (MUST BE THE SAME ON encode.src AND decode.bin)
 
 Encode = function(password)
     password = password.replace("\n","")
