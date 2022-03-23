@@ -3,7 +3,7 @@ Version: 2c1
 
 nCrypt is a Greyhack hashing helper module for people who don't know much about password security or people who don't want to write one lol
 
-![Image of nCrypt](https://media.discordapp.net/attachments/907673434484539452/914980621166710854/unknown.png)
+![Image of nCrypt](https://i.ibb.co/zJsz3Sv/image.png)
 
 ## How to use:
 ```lua
