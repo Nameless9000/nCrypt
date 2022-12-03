@@ -1,6 +1,6 @@
 nCryptLibrary = {}
 
-nCryptLibrary.version = "2c1"
+nCryptLibrary.version = "2d"
 
 band=function(x,y)
     return bitwise("&",x,y) 
@@ -309,6 +309,8 @@ end function
 nCryptLibrary.secret = ""
 nCryptLibrary.iterations = 0
 
+nCryptLibrary.BLOCK_SIZE = 64
+
 nCryptLibrary.getSecret = function()
     if self.secret.trim == "" then self.secret = self.GenerateRandomString(32)
 
@@ -348,10 +350,32 @@ nCryptLibrary.Encode = function(inputString)
     return enc
 end function
 
+string_xor = function(s1, s2)
+	if s1.len != s2.len then exit("HMAC Error:strings must be of equal length")
+
+	buf = []
+	for i in range(s1.len)
+		buf.push(bitwise("^", s1[i-1].code, s2[i-1].code))
+    end for
+
+	return buf.join("")
+end function
+
 nCryptLibrary.HMac = function(inputString)
-    newString = self.getSecret()+"$"+inputString
-    hashedString = self.HashMethod(newString)
-    return self.HexEncode(hashedString)
+    key = = self.getSecret()
+		
+		if key.len > self.BLOCK_SIZE then
+				key = self.HashMethod(key)
+		end if
+
+		key = key + "0"*(self.BLOCK_SIZE - key.len)
+
+		opad = string_xor(key, "\"*self.BLOCK_SIZE)
+		ipad = string_xor(key, "6"*self.BLOCK_SIZE)
+
+		hashedString = self.HashMethod(opad + self.HashMethod(ipad + inputString))
+
+		return self.HexEncode(hashedString)
 end function
 
 nCryptLibrary.GenerateSalt = function()
