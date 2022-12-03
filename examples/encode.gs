@@ -441,3 +441,39 @@ nCryptLibrary.Compare = function(inputString, inputHash)
 end function
 
 return nCryptLibrary
+
+
+//////////////////////////////////////
+
+nCrypt = new nCryptLibrary
+
+nCrypt.iterations = 3
+nCrypt.secret = "abc123" //-- set this to a random string (MUST BE THE SAME ON encode.src AND decode.bin)
+
+Encode = function(password)
+  password = password.replace("\n","")
+  password = password.replace(char(10),"")
+  password = password.trim
+
+  password = nCrypt.Hash(password)
+
+  password = password.replace("\n","")
+  password = password.replace(char(10),"")
+  password = password.trim
+
+  return password
+end function
+
+Decode = function(input) //-- remove this section for encode.src or they will know ur pass
+  pass = "test123" //-- set this to your root password
+  if nCrypt.Compare(pass,input) then return pass
+  return "no"
+end function
+
+// testing
+
+xHash = Encode("test123")
+print(xHash)
+
+xResult = Decode(xHash)
+print(xResult)
