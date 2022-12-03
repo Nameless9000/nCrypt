@@ -308,11 +308,13 @@ end function
 
 nCryptLibrary.secret = ""
 nCryptLibrary.iterations = 0
-
+nCryptLibrary.expireSecret = false
 nCryptLibrary.BLOCK_SIZE = 64
 
 nCryptLibrary.getSecret = function()
-	if self.secret.trim == "" then self.secret = self.GenerateRandomString(32)
+	if self.secret.trim == "" then
+		self.secret = self.GenerateRandomString(32)
+	end if
 
 	return self.secret
 end function
@@ -325,8 +327,8 @@ nCryptLibrary.GenerateRandomString = function(length)
 	output = ""
 	alph = "!#%&()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~'"
 	for i in range(1, length)
-			c = round((rnd * alph.len))-1
-			output = output + alph[c]
+		c = round((rnd * alph.len))-1
+		output = output + alph[c]
 	end for
 
 	return output
@@ -356,16 +358,16 @@ string_xor = function(s1, s2)
 	buf = []
 	for i in range(s1.len)
 		buf.push(bitwise("^", s1[i-1].code, s2[i-1].code))
-    end for
+  end for
 
 	return buf.join("")
 end function
 
-nCryptLibrary.HMac = function(inputString)
-	key = self.getSecret()
+nCryptLibrary.HMac = function(inputString, key = "")
+	key = self.getSecret() + key
 	
 	if key.len > self.BLOCK_SIZE then
-			key = self.HashMethod(key)
+		key = self.HashMethod(key)
 	end if
 
 	key = key + "0"*(self.BLOCK_SIZE - key.len)
@@ -394,7 +396,7 @@ nCryptLibrary.CreateHash = function(inputString, iterations = null, salt = null)
 
 	lst=[]
 	for c in saltHash    
-			lst.push(c.code)
+		lst.push(c.code)
 	end for
 
 	saltHashEncode = b64encode(lst)
@@ -408,7 +410,7 @@ nCryptLibrary.Hash = function(inputString, iterations = null, salt = null)
 	if salt == null then salt = self.GenerateSalt()
 
 	for i in range(1, 2^(self.iterations/2))
-			inputString = self.CreateHash(inputString, i, salt)
+		inputString = self.CreateHash(inputString, i, salt)
 	end for
 
 	return inputString
@@ -428,16 +430,43 @@ nCryptLibrary.Compare = function(inputString, inputHash)
 	dec = b64decode(mainString)
 	mainString=""
 	for i in dec
-			mainString = mainString + char(i)
+		mainString = mainString + char(i)
 	end for
 
 	salt = mainString[:24]
 
 	for i in range(1, 2^(iterations/2))
-			inputString = self.CreateHash(inputString, i, salt)
+		inputString = self.CreateHash(inputString, i, salt)
 	end for
 
 	return inputString == inputHash
+end function
+
+nCryptLibrary.secureHash = function(text)
+	dateTime = current_date.split(" - ")
+
+	hour = dateTime[1].split(":")[0]
+	minute = dateTime[1].split(":")[1]
+
+	nonce = R1_MD5(dateTime[0] + hour + str(floor(minute/(floor(self.iterations/5)+1))))
+
+	hmacString = self.HMac(text, nonce)
+	hashString = self.Hash(hmacString)
+
+	return hashString
+end function
+
+nCryptLibrary.secureCompare = function(text, hashInput)
+	dateTime = current_date.split(" - ")
+
+	hour = dateTime[1].split(":")[0]
+	minute = dateTime[1].split(":")[1]
+
+	nonce = R1_MD5(dateTime[0] + hour + str(floor(minute/(floor(self.iterations/5)+1))))
+
+	hmacString = self.HMac(text, nonce)
+
+	return self.Compare(hmacString, hashInput)
 end function
 
 return nCryptLibrary
